@@ -1,0 +1,114 @@
+<section class="lpo-dtls-section" aria-labelledby="lpo-items-heading">
+  <div class="section-header">
+    <div class="section-heading">
+      <span class="section-kicker">ORDER BREAKDOWN</span>
+      <h2 id="lpo-items-heading">LPO Items</h2>
+      <p class="section-description">Review and manage the items included in this order.</p>
+    </div>
+
+    <button type="button" class="action-button action-button--primary" (click)="addItem()">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 5v14M5 12h14" />
+      </svg>
+      <span>Add item</span>
+    </button>
+  </div>
+
+  <p *ngIf="errorMessage()" class="state-message state-message--error" role="alert">
+    {{ errorMessage() }}
+  </p>
+
+  <div *ngIf="loading()" class="state-message state-message--loading" role="status">
+    <span class="loading-indicator" aria-hidden="true"></span>
+    Loading LPO items...
+  </div>
+
+  <div *ngIf="!loading() && !errorMessage() && lpoDtls().length === 0" class="empty-state">
+    <span class="empty-state-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><path d="M4 7.5 12 3l8 4.5v9L12 21l-8-4.5zM4.5 7.8 12 12l7.5-4.2M12 12v8.5M8 5.3l8 4.6" /></svg>
+    </span>
+    <strong>No items added yet</strong>
+    <span>Use “Add item” to start building this order.</span>
+  </div>
+
+  <div *ngIf="!loading() && !errorMessage() && lpoDtls().length > 0" class="table-scroll">
+    <table class="lpo-dtls-table">
+      <thead>
+        <tr>
+          <th scope="col" class="item-column">Item</th>
+          <th scope="col" class="amount-column">Foreign currency amount</th>
+          <th scope="col" class="amount-column">Local currency amount</th>
+          <th scope="col" class="actions-column"><span class="visually-hidden">Actions</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of lpoDtls(); let rowIndex = index" class="lpo-dtls-row">
+          <td>
+            <div class="item-cell">
+              <span class="row-number">{{ rowIndex + 1 | number:'2.0' }}</span>
+              <app-dropdown
+                *ngIf="isEditing(item); else itemCodeDisplay"
+                cmCode="LpoItems"
+                [(value)]="item.lpoD_ITEM_CODE"
+                placeholder="Select item code"
+                ariaLabel="Item code">
+              </app-dropdown>
+              <ng-template #itemCodeDisplay>
+                <span class="item-code">{{ item.lpoD_ITEM_CODE || 'Choose an item' }}</span>
+              </ng-template>
+            </div>
+          </td>
+          <td>
+            <input
+              *ngIf="isEditing(item); else foreignAmountDisplay"
+              class="amount-input"
+              type="number"
+              min="0"
+              step="0.01"
+              [(ngModel)]="item.lpoD_FC_AMT"
+              [attr.aria-label]="'Foreign currency amount for item ' + (rowIndex + 1)">
+            <ng-template #foreignAmountDisplay>
+              <span class="amount-value">{{ item.lpoD_FC_AMT | number:'1.2-2' }}</span>
+            </ng-template>
+          </td>
+          <td><span class="amount-value amount-value--muted">{{ item.lpoD_LC_AMT | number:'1.2-2' }}</span></td>
+          <td>
+            <div class="row-actions">
+              <button
+                type="button"
+                class="icon-button icon-button--edit"
+                [attr.aria-label]="isEditing(item) ? 'Finish editing item ' + (rowIndex + 1) : 'Edit item ' + (rowIndex + 1)"
+                [title]="isEditing(item) ? 'Finish editing' : 'Edit item'"
+                (click)="toggleEdit(item)">
+                <svg *ngIf="!isEditing(item); else saveIcon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 20h9" />
+                  <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z" />
+                </svg>
+                <ng-template #saveIcon>
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="m5 12 4 4L19 6" />
+                  </svg>
+                </ng-template>
+              </button>
+              <button
+                type="button"
+                class="icon-button icon-button--delete"
+                [attr.aria-label]="'Delete item ' + (rowIndex + 1)"
+                title="Delete item"
+                (click)="deleteItem(item)">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M3 6h18M8 6V4h8v2m3 0-1 14H6L5 6m4 4v6m6-6v6" />
+                </svg>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="!loading() && !errorMessage() && lpoDtls().length > 0" class="table-footer">
+    <span>{{ lpoDtls().length }} {{ lpoDtls().length === 1 ? 'item' : 'items' }}</span>
+    <span>Amounts are shown in their respective currencies</span>
+  </div>
+</section>

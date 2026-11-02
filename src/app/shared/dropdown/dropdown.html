@@ -1,0 +1,14 @@
+<select
+  class="shared-dropdown"
+  [value]="value"
+  [attr.aria-label]="ariaLabel"
+  [disabled]="loading() || !!errorMessage() || options().length === 0"
+  (change)="onSelectionChange($event)">
+  <option value="">{{ loading() ? 'Loading options...' : placeholder }}</option>
+  @for (option of options(); track option.value) {
+    <option [value]="option.value">{{ option.label }}</option>
+  }
+</select>
+@if (errorMessage()) {
+  <span class="dropdown-error" role="alert">{{ errorMessage() }}</span>
+}

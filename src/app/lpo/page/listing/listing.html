@@ -1,0 +1,97 @@
+<div class="lpo-page">
+
+  <div class="page-header">
+    <div>
+      <h1>LPO Listing</h1>
+      <p>View all Letter of Payment Order records.</p>
+    </div>
+
+    <button
+      type="button"
+      class="refresh-button"
+      (click)="loadLpos()"
+      [disabled]="loading()">
+      Refresh
+    </button>
+  </div>
+
+  @if (loading()) {
+    <div class="message">
+      Loading LPO records...
+    </div>
+  } @else if (errorMessage()) {
+    <div class="message error">
+      {{ errorMessage() }}
+    </div>
+  } @else if (lpos().length === 0) {
+    <div class="message">
+      No LPO records found.
+    </div>
+  } @else {
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>LPO No.</th>
+            <th>Claim No.</th>
+            <th>Registration No.</th>
+            <th>Chassis No.</th>
+            <th>Engine No.</th>
+            <th>LC Amount</th>
+            <th>Approval Status</th>
+            <th>Created Date</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (item of lpos(); track item.lpO_UID) {
+            <tr [routerLink]="['/lpo', item.lpO_UID]"
+      class="clickable-row">
+              <td>
+                  {{ item.lpO_NO || '-' }}
+              
+              </td>
+              <td>{{ item.lpO_CLM_NO }}</td>
+              <td>{{ item.lpO_REGN_NO || '-' }}</td>
+              <td>{{ item.lpO_CHASSIS_NO || '-' }}</td>
+              <td>{{ item.lpO_ENGINE_NO || '-' }}</td>
+             
+
+              <td class="number">
+                {{ item.lpO_LC_AMT | number:'1.2-2' }}
+              </td>
+
+
+              <td>
+                {{
+                  item.lpO_APPR_STS === 'N'
+                    ? 'Not Approved'
+                    : item.lpO_APPR_STS === 'A'
+                      ? 'Approved'
+                      : item.lpO_APPR_STS === 'R'
+                        ? 'Rejected'
+                        : item.lpO_APPR_STS === 'E'
+                          ? 'Amended'
+                          : item.lpO_APPR_STS || '-'
+                }}
+              </td>
+
+              <td>
+                {{
+                  item.lpO_CR_DT
+                    ? (item.lpO_CR_DT | date:'dd MMM yyyy, h:mm a')
+                    : '-'
+                }}
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="record-count">
+      Total records: {{ lpos().length }}
+    </div>
+  }
+
+</div>

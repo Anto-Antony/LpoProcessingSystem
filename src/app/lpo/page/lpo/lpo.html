@@ -1,0 +1,86 @@
+<div class="lpo-page">
+
+  <a class="back-link" routerLink="/lpo/listing">
+    &larr; Back to LPO listing
+  </a>
+
+  <h1>LPO Details</h1>
+
+  <!-- Loading -->
+  <p *ngIf="loading()">
+    Loading LPO details...
+  </p>
+
+  <!-- Error -->
+  <p *ngIf="!loading() && errorMessage()" class="error-message">
+    {{ errorMessage() }}
+  </p>
+
+  <!-- LPO Information -->
+  <ng-container *ngIf="!loading() && !errorMessage() && lpo() as record">
+
+    <div class="details-grid">
+
+      <article class="detail-item">
+        <h2>Claim Number</h2>
+        <p>{{ record.lpO_CLM_NO }}</p>
+      </article>
+
+      <article class="detail-item">
+        <h2>LPO Number</h2>
+        <p>{{ record.lpO_NO || 'N/A' }}</p>
+      </article>
+
+      <article class="detail-item">
+        <h2>Chassis Number</h2>
+        <p>{{ record.lpO_CHASSIS_NO || 'N/A' }}</p>
+      </article>
+
+      <article class="detail-item">
+        <h2>Registration Number</h2>
+        <p>{{ record.lpO_REGN_NO || 'N/A' }}</p>
+      </article>
+
+      <article class="detail-item">
+        <h2>Engine Number</h2>
+        <p>{{ record.lpO_ENGINE_NO || 'N/A' }}</p>
+      </article>
+
+      <article class="detail-item">
+        <h2>Currency</h2>
+        <p>{{ record.lpO_CURR }}</p>
+      </article>
+
+      <article class="detail-item">
+        <h2>Exchange Rate</h2>
+        <p>{{ record.lpO_CURR_RATE }}</p>
+      </article>
+
+      <article class="detail-item">
+        <h2>Foreign Currency Amount</h2>
+        <p>{{ record.lpO_FC_AMT | number:'1.2-2' }}</p>
+      </article>
+
+      <article class="detail-item">
+        <h2>Local Currency Amount</h2>
+        <p>{{ record.lpO_LC_AMT | number:'1.2-2' }}</p>
+      </article>
+
+      <article class="detail-item">
+        <h2>Quotation Number</h2>
+        <p>{{ record.lpO_QUOT_NO || 'N/A' }}</p>
+      </article>
+
+    </div>
+
+    <app-lpo-dtls [lpoId]="record.lpO_UID"></app-lpo-dtls>
+
+  </ng-container>
+
+  <!-- Empty State -->
+  <p *ngIf="!loading() && !errorMessage() && !lpo()">
+    No LPO record is available.
+  </p>
+
+</div>
+
