@@ -64,14 +64,28 @@
               class="amount-input"
               type="number"
               min="0"
-              step="0.01"
-              [(ngModel)]="item.lpoD_FC_AMT"
+              step="0.01" 
+              [ngModel]="item.lpoD_FC_AMT"
+              (ngModelChange)="calculateForeignAmount(rowIndex, $event)"
               [attr.aria-label]="'Foreign currency amount for item ' + (rowIndex + 1)">
             <ng-template #foreignAmountDisplay>
               <span class="amount-value">{{ item.lpoD_FC_AMT | number:'1.2-2' }}</span>
             </ng-template>
           </td>
-          <td><span class="amount-value amount-value--muted">{{ item.lpoD_LC_AMT | number:'1.2-2' }}</span></td>
+                    <td>
+            <input
+              *ngIf="isEditing(item); else localAmountDisplay"
+              class="amount-input"
+              type="number"
+              min="0"
+              step="0.01"
+              [ngModel]="item.lpoD_LC_AMT"
+              (ngModelChange)="calculateLocalAmount(rowIndex, $event)"
+              [attr.aria-label]="'Local currency amount for item ' + (rowIndex + 1)">
+            <ng-template #localAmountDisplay>
+              <span class="amount-value amount-value--muted">{{ item.lpoD_LC_AMT | number:'1.2-2' }}</span>
+            </ng-template>
+          </td>
           <td>
             <div class="row-actions">
               <button
@@ -112,3 +126,5 @@
     <span>Amounts are shown in their respective currencies</span>
   </div>
 </section>
+
+

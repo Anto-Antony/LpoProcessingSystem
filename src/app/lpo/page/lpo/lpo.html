@@ -53,7 +53,16 @@
 
       <article class="detail-item">
         <h2>Exchange Rate</h2>
-        <p>{{ record.lpO_CURR_RATE }}</p>
+        <p>
+          <input
+            type="number"
+            min="0"
+            step="any"
+             [(ngModel)]="record.lpO_CURR_RATE"
+            (ngModelChange)="getExchangeRate($event)"
+            [attr.aria-label]="'Exchange rate'"
+          />
+        </p>
       </article>
 
       <article class="detail-item">
@@ -73,7 +82,7 @@
 
     </div>
 
-    <app-lpo-dtls [lpoId]="record.lpO_UID"></app-lpo-dtls>
+    <app-lpo-dtls [lpoId]="record.lpO_UID" [exchangeRate]="record.lpO_CURR_RATE" (totalsChange)="syncLpoTotals($event)"></app-lpo-dtls>
 
   </ng-container>
 

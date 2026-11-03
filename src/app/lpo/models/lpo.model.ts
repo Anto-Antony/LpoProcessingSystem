@@ -1,3 +1,8 @@
+export interface LpoAmountTotals {
+  foreignCurrencyAmount: number;
+  localCurrencyAmount: number;
+}
+
 export interface LpoModel {
   lpO_UID: number;
   lpO_CLM_UID: number;
@@ -30,6 +35,6 @@ export interface LpoModel {
 export interface ApiResponse<T> {
   success: boolean;
   statusCode: number;
-  errorCode: string;
+  errorCode: string | null;
   data: T | null;
 }
